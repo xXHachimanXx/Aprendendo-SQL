@@ -80,3 +80,5 @@ CREATE TABLE ALUNO
 );
 
 
+---Selecionar o título, ano publicação, quantidade de exemplares e valor médio de aquisição dos
+---livros adquiridos no ano de 2019, cujo assunto seja “Literatura Brasileira”.
