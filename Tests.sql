@@ -1,0 +1,3 @@
+USE BD;
+
+SELECT * FROM AUTOR order by CODIGO;
