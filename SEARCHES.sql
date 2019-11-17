@@ -2,7 +2,7 @@ USE BD2;
 
 SELECT * FROM ASSUNTO;
 
--- questao 03 e fodase
+-- questao 03
 SELECT L.TITULO, L.ANOPUBLIC, COUNT(*), AVG(E.VALORAQUISICAO) FROM LIVRO AS L
 	JOIN EXEMPLAR AS E ON L.CODIGO = E.CODLIVRO 
 	JOIN ASSUNTO AS A ON A.DESCRICAO = "LITERATURA BRASILEIRA";
@@ -35,6 +35,8 @@ select NOME from aluno as a
     having count(e.CODEMPREST) >= 10;
     
 -- questao 09
+select distinct a.NOMEAUT from autor as a, autoria as au where au.CODLIVRO = 
+( select CODLIVRO from autoria where codautor = (select CODIGO from autor where NOMEAUT = "NAVATHE") ) and a.codigo = au.codautor and a.nomeaut <> "NAVATHE";
 
 
 
