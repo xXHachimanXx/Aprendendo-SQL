@@ -38,31 +38,24 @@ select NOME from aluno as a
 select distinct a.NOMEAUT from autor as a, autoria as au where au.CODLIVRO = 
 ( select CODLIVRO from autoria where codautor = (select CODIGO from autor where NOMEAUT = "NAVATHE") ) and a.codigo = au.codautor and a.nomeaut <> "NAVATHE";
 
--- questao 15	
-select titulo, max(count(*)) from livro as l
-join exemplar as ex on ex.codlivro = l.codigo
-join itememprest as ie on ie.codexemplar = ex.codexemplar
-join emprestimo as emp on emp.codemprest = ie.codemprestitem ;
+-- questao 16
+SELECT distinct l.titulo, e.codexemplar FROM livro AS l 
+JOIN exemplar AS e
+JOIN editora AS ed ON e.codlivro = l.codigo AND ed.codigo = l.codedit 
+WHERE e.VALORAQUISICAO > (SELECT av FROM (SELECT AVG(e.valoraquisicao) AS av, ed.codigo AS ed 
+	FROM livro AS l JOIN exemplar AS e JOIN editora AS ed ON e.codlivro = l.codigo AND ed.codigo = l.codedit GROUP BY ed.codigo) 
+    AS tb0 WHERE ed = ed.codigo);
 
--- questao 16 valor exemplar > this.edit.avg(valorexemplar)
--- select l.titulo, ex.codexemplar from (exemplar as ex
--- join livro as l on l.codigo = ex.codlivro
--- join editora as ed on l.codedit = ed.codigo)
--- where ;
-
-select avg(valoraquisicao) from exemplar as ex
-join livro as l on l.codigo = ex.codlivro
-join editora as ed on l.codedit = ed.codigo;
-
-select l.titulo, ex.codexemplar from livro as l, editora as ed, exemplar as ex
-where ex.valorexemplar > (select avg(valorexemplar) from editora where l.codedit = codigo and ex.codlivro = l.codigo);
-
-select avg(valoraquisicao) from exemplar as e where e.codlivro = (select codigo from livro)
-
--- e.valorexemplar > avg(select valorexemplar from exemplar where ed.cod = l.codeditora);
 -- questao 17
-select distinct codigo from aluno as a, emprestimo as e where e.codaluno <> a.codigo;
+SET optimizer_switch = 'derived_merge=off'; 
+SET SQL_SAFE_UPDATES = 0; 
+DELETE FROM aluno 
+WHERE codigo IN (SELECT a.codigo FROM (SELECT * FROM aluno) AS a 
+LEFT JOIN emprestimo AS e ON a.codigo = e.codaluno WHERE e.CODEMPREST IS NULL); 
+SET optimizer_switch = 'derived_merge=on'; 
+SET SQL_SAFE_UPDATES = 1;
 
+select codigo from aluno;
 
 -- questao 18
 update livro as l
