@@ -38,6 +38,37 @@ select NOME from aluno as a
 select distinct a.NOMEAUT from autor as a, autoria as au where au.CODLIVRO = 
 ( select CODLIVRO from autoria where codautor = (select CODIGO from autor where NOMEAUT = "NAVATHE") ) and a.codigo = au.codautor and a.nomeaut <> "NAVATHE";
 
+-- questao 10
+select * from autor as a 
+join autoria as atr on a.codigo = atr.codautor
+group by codigo
+having codlivro = 1;
+
+-- where (select codlivro from autoria as atr group by codautor) = 1;
+
+select distinct a.NOMEAUT from autor as a, autoria as au where 
+au.CODLIVRO = 
+( select CODLIVRO from autoria where codautor = (select CODIGO from autor where NOMEAUT = "NAVATHE") ) 
+
+
+
+-- questao 15
+select distinct titulo from (select * from livro as l
+join exemplar as ex on ex.codlivro = l.codigo
+join itememprest as ie on ie.codexemplar = ex.codexemplar) as x where count(*) = max(count(*));
+
+select titulo from (select titulo from livro as l
+	join exemplar as ex 
+	join itememprest as ie
+    join emprestimo as emp 
+		on ie.codexemplar = ex.codexemplar and 
+		   ex.codlivro = l.codigo and 
+           ie.codemprestitem = emp.codemprest 
+           and dataemprest = "2019"	
+	) as a
+	where max(count(a.titulo)) = 1;
+
+
 -- questao 16
 SELECT distinct l.titulo, e.codexemplar FROM livro AS l 
 JOIN exemplar AS e

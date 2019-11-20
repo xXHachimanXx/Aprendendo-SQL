@@ -153,36 +153,36 @@ INSERT INTO ALUNO
     
 -- INSERT EM EMPRESTIMO
 INSERT INTO EMPRESTIMO
-    VALUES (1, '2011-01-01', 1);
+    VALUES (1, '2011', 1);
 INSERT INTO EMPRESTIMO
-    VALUES (2, '2011-01-01', 1);
+    VALUES (2, '2011', 1);
 INSERT INTO EMPRESTIMO
-    VALUES (3, '2011-01-01', 1);
+    VALUES (3, '2011', 1);
 INSERT INTO EMPRESTIMO
-    VALUES (4, '2011-01-01', 1);    
+    VALUES (4, '2019', 1);    
 INSERT INTO EMPRESTIMO
-    VALUES (5, '2011-01-01', 1);
+    VALUES (5, '2019', 1);
 INSERT INTO EMPRESTIMO
-    VALUES (6, '2011-01-01', 1);
+    VALUES (6, '2019', 1);
  INSERT INTO EMPRESTIMO
-    VALUES (7, '2011-01-01', 1);
+    VALUES (7, '2019', 1);
 INSERT INTO EMPRESTIMO
-    VALUES (8, '2011-01-01', 1);
+    VALUES (8, '2019', 1);
 INSERT INTO EMPRESTIMO
-    VALUES (9, '2011-01-01', 1);
+    VALUES (9, '2019', 1);
 INSERT INTO EMPRESTIMO
-    VALUES (10, '2011-01-01', 1);  
+    VALUES (10, '2019', 1);  
 
 -- insert em itememprest
 insert into itememprest
-	values(1, 2, '2019-12-11', 100.1);
-    
+	values(1, 2, '20199', 100.1);
 insert into itememprest
-	values(2, 1, '2019-11-11', 100.2);
-    
+	values(2, 1, '20199', 100.2);
 insert into itememprest
-	values(3, 3, '2019-12-11', 1.5);
-    
+	values(3, 3, '20199', 1.5);    
+insert into itememprest
+	values(4, 3, '20199', 1.5);    
+  
 -- INSERT EM AUTORIA
 INSERT INTO AUTORIA
     VALUES (1, 1);
@@ -197,6 +197,4 @@ INSERT INTO AUTORIA
 INSERT INTO AUTORIA
     VALUES (3, 3);   
 INSERT INTO AUTORIA
-    VALUES (3, 1);   
-INSERT INTO AUTORIA
-    VALUES (3, 2); 
+    VALUES (3, 1); 
