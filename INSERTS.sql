@@ -1,7 +1,7 @@
 -- Questão 02
 -- INSERT AUTOR
 INSERT INTO AUTOR
-    VALUES ("CLEITON VERGAS", 1);
+    VALUES ("MACHADO DE ASSIS", 1);
     
 INSERT INTO AUTOR
     VALUES ("CHICO TORRESMO", 2);
@@ -41,6 +41,9 @@ INSERT INTO EDITORA
 
 INSERT INTO EDITORA
     VALUES ("PEARSON", 6);
+
+INSERT INTO EDITORA
+    VALUES ("CAMPUS", 7);    
     
 -- INSERT EM ASSUNTO
 INSERT INTO ASSUNTO
@@ -66,7 +69,7 @@ INSERT INTO LIVRO
     VALUES (2, "MEMÓRIAS PÓSTUMAS DE BRAS CUBAS", '2019', 1, 2);
 
 INSERT INTO LIVRO
-    VALUES (3, "REI DO GADO", '2019', 2, 3);
+    VALUES (3, "REI DO GADO", '2019', 7, 3);
     
 INSERT INTO LIVRO
     VALUES (4, "BIBLIOGRAFIA DE CHIQUINHO SCARPA", '2019', 2, 2);
@@ -81,7 +84,7 @@ INSERT INTO LIVRO
     VALUES (7, "CARNAVAL 2006", '2007', 5, 5);    
     
 INSERT INTO LIVRO
-    VALUES (8, "PAI DE FAMILIA", '2009', 5, 5);
+    VALUES (8, "PAI DE FAMILIA", '2009', 7, 5);
     
 INSERT INTO LIVRO
     VALUES (9, "UM PISTOLEIRO CHAMADO PAPACO", '2010', 5, 2);
@@ -171,7 +174,15 @@ INSERT INTO EMPRESTIMO
 INSERT INTO EMPRESTIMO
     VALUES (9, '2019', 1);
 INSERT INTO EMPRESTIMO
-    VALUES (10, '2019', 1);  
+    VALUES (10, '2019', 1);
+INSERT INTO EMPRESTIMO
+    VALUES (11, '2019', 2);    
+INSERT INTO EMPRESTIMO
+    VALUES (12, '2019', 2);
+INSERT INTO EMPRESTIMO
+    VALUES (13, '2019', 2);
+INSERT INTO EMPRESTIMO
+    VALUES (14, '2012', 3);
 
 -- insert em itememprest
 insert into itememprest
@@ -181,7 +192,15 @@ insert into itememprest
 insert into itememprest
 	values(3, 3, '20199', 1.5);    
 insert into itememprest
-	values(4, 3, '20199', 1.5);    
+	values(4, 3, '20199', 1.5); 
+insert into itememprest
+	values(5, 3, '2019', 1.5);
+insert into itememprest
+	values(6, 3, '2019', 1.5);
+insert into itememprest
+	values(7, 3, '2019', 1.5);
+insert into itememprest
+	values(8, 3, '2019', 1.5);    
   
 -- INSERT EM AUTORIA
 INSERT INTO AUTORIA

@@ -3,9 +3,9 @@ USE BD2;
 SELECT * FROM ASSUNTO;
 
 -- questao 03
-SELECT L.TITULO, L.ANOPUBLIC, COUNT(*), AVG(E.VALORAQUISICAO) FROM LIVRO AS L
-	JOIN EXEMPLAR AS E ON L.CODIGO = E.CODLIVRO 
-	JOIN ASSUNTO AS A ON A.DESCRICAO = "LITERATURA BRASILEIRA";
+select l.titulo, l.anopublic, count(*), avg(e.valoraquisicao) from livro as l
+	join exemplar as e on l.codigo = e.codlivro 
+	join assunto as a on a.descricao = "LITERATURA BRASILEIRA";
     
 -- questao 04
 SELECT l.TITULO, ie.MULTA, emp.DATAEMPREST FROM LIVRO AS L	
@@ -39,13 +39,44 @@ select distinct a.NOMEAUT from autor as a, autoria as au where au.CODLIVRO =
 ( select CODLIVRO from autoria where codautor = (select CODIGO from autor where NOMEAUT = "NAVATHE") ) and a.codigo = au.codautor and a.nomeaut <> "NAVATHE";
 
 -- questao 10
-SELECT COUNT(*) FROM autoria WHERE codautor = (SELECT codigo FROM autor WHERE nomeaut = 'NAVATHE');
-SELECT COUNT(*) FROM autor a JOIN autoria i ON a.codigo = i.codautor WHERE a.nomeaut = 'NAVATHE';
-
 SELECT nomeaut FROM autor a0 WHERE 
 (SELECT COUNT(*) FROM autor a1 JOIN autoria i ON a1.codigo = i.codautor WHERE a1.codigo = a0.codigo) > 
 (SELECT COUNT(*) FROM autor a2 JOIN autoria i ON a2.codigo = i.codautor WHERE a2.nomeaut = 'NAVATHE');
 
+-- questao 11
+select nome, avg(multa) from aluno as a 
+left join emprestimo as e on a.codigo = e.codaluno
+left join itememprest as ie on ie.codemprestitem = e.codemprest
+having avg(multa) > max( (select avg(multa) from aluno as a 
+	left join emprestimo as e on a.codigo = e.codaluno
+	left join itememprest as ie on ie.codemprestitem = e.codemprest and cidade = "Belo Horizonte" ) );
+
+-- questao 12 
+select nome, count(codemprest) from aluno as a
+left join emprestimo as e on e.codaluno = a.codigo
+group by nome
+having count(codemprest) > (
+	select count(codemprest) from autor as au
+	left join autoria as aut on au.codigo = aut.codautor
+	left join livro as l on aut.codlivro = l.codigo
+	left join exemplar as ex on ex.codlivro = l.codigo
+	left join itememprest as ie on ex.codexemplar = ie.codexemplar
+	left join emprestimo as emp on emp.codemprest = ie.codemprestitem and nomeaut = "MACHADO DE ASSIS"
+);
+
+-- questao 13
+select nomeedit, count(l.codigo) from editora as edt
+left join livro as l on edt.codigo = l.codedit
+group by edt.codigo
+having count(l.codigo) > ( select count(l.codigo) from editora as edt
+left join livro as l on edt.codigo = l.codedit and edt.nomeedit = "CAMPUS");
+
+-- questao 14
+select nome, titulo from aluno as a
+join emprestimo as emp on emp.codaluno = a.codigo and month(emp.dataemprest) = 9
+join itememprest as ie on ie.codemprestitem = emp.codemprest and (day(ie.datadevolucao) - day(emp.dataemprest)) <= 2
+join exemplar as ex on ex.codexemplar = ie.codexemplar
+join livro as l on l.codigo = ex.codlivro;
 
 -- questao 15      
 desc itememprest;
@@ -56,12 +87,12 @@ JOIN itememprest i ON l.codigo = ex.codlivro AND ex.codexemplar = i.codexemplar
 WHERE
 (SELECT COUNT(*) FROM itememprest i2  
  JOIN emprestimo em ON em.codemprest = i2.codemprestitem 
- WHERE i2.codexemplar = ex.codexemplar AND em.dataemprest = 2019)
+ WHERE i2.codexemplar = ex.codexemplar AND year(em.dataemprest) = 2019)
  = 
 (SELECT MAX(qtd) FROM( 
 	SELECT COUNT(*) AS qtd FROM itememprest i2 
 	JOIN emprestimo em ON em.codemprest = i2.codemprestitem	
-	WHERE em.dataemprest = 2019
+	WHERE year(em.dataemprest) = 2019
 	GROUP BY i2.codexemplar) AS tb0 );
     
 -- questao 16
