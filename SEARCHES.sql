@@ -39,36 +39,31 @@ select distinct a.NOMEAUT from autor as a, autoria as au where au.CODLIVRO =
 ( select CODLIVRO from autoria where codautor = (select CODIGO from autor where NOMEAUT = "NAVATHE") ) and a.codigo = au.codautor and a.nomeaut <> "NAVATHE";
 
 -- questao 10
-select * from autor as a 
-join autoria as atr on a.codigo = atr.codautor
-group by codigo
-having codlivro = 1;
+SELECT COUNT(*) FROM autoria WHERE codautor = (SELECT codigo FROM autor WHERE nomeaut = 'NAVATHE');
+SELECT COUNT(*) FROM autor a JOIN autoria i ON a.codigo = i.codautor WHERE a.nomeaut = 'NAVATHE';
 
--- where (select codlivro from autoria as atr group by codautor) = 1;
-
-select distinct a.NOMEAUT from autor as a, autoria as au where 
-au.CODLIVRO = 
-( select CODLIVRO from autoria where codautor = (select CODIGO from autor where NOMEAUT = "NAVATHE") ) 
+SELECT nomeaut FROM autor a0 WHERE 
+(SELECT COUNT(*) FROM autor a1 JOIN autoria i ON a1.codigo = i.codautor WHERE a1.codigo = a0.codigo) > 
+(SELECT COUNT(*) FROM autor a2 JOIN autoria i ON a2.codigo = i.codautor WHERE a2.nomeaut = 'NAVATHE');
 
 
+-- questao 15      
+desc itememprest;
 
--- questao 15
-select distinct titulo from (select * from livro as l
-join exemplar as ex on ex.codlivro = l.codigo
-join itememprest as ie on ie.codexemplar = ex.codexemplar) as x where count(*) = max(count(*));
-
-select titulo from (select titulo from livro as l
-	join exemplar as ex 
-	join itememprest as ie
-    join emprestimo as emp 
-		on ie.codexemplar = ex.codexemplar and 
-		   ex.codlivro = l.codigo and 
-           ie.codemprestitem = emp.codemprest 
-           and dataemprest = "2019"	
-	) as a
-	where max(count(a.titulo)) = 1;
-
-
+SELECT l.titulo FROM livro l 
+JOIN exemplar ex 
+JOIN itememprest i ON l.codigo = ex.codlivro AND ex.codexemplar = i.codexemplar
+WHERE
+(SELECT COUNT(*) FROM itememprest i2  
+ JOIN emprestimo em ON em.codemprest = i2.codemprestitem 
+ WHERE i2.codexemplar = ex.codexemplar AND em.dataemprest = 2019)
+ = 
+(SELECT MAX(qtd) FROM( 
+	SELECT COUNT(*) AS qtd FROM itememprest i2 
+	JOIN emprestimo em ON em.codemprest = i2.codemprestitem	
+	WHERE em.dataemprest = 2019
+	GROUP BY i2.codexemplar) AS tb0 );
+    
 -- questao 16
 SELECT distinct l.titulo, e.codexemplar FROM livro AS l 
 JOIN exemplar AS e
