@@ -8,40 +8,41 @@ select l.titulo, l.anopublic, count(*), avg(e.valoraquisicao) from livro as l
 	join assunto as a on a.descricao = "LITERATURA BRASILEIRA";
     
 -- questao 04
-SELECT l.TITULO, ie.MULTA, emp.DATAEMPREST FROM LIVRO AS L	
-	JOIN exemplar AS e ON e.codlivro = l.codigo
-    JOIN itememprest AS ie ON ie.CODEXEMPLAR = e.codlivro
-    JOIN emprestimo AS emp on emp.codemprest = ie.codemprestitem
-    join aluno a on a.NOME = "Bernardo Valadares";
+select l.titulo, ie.multa, emp.dataemprest from livro as l	
+	join exemplar as e on e.codlivro = l.codigo
+    join itememprest as ie on ie.codexemplar = e.codlivro
+    join emprestimo as emp on emp.codemprest = ie.codemprestitem
+    join aluno a on a.nome = "bernardo valadares";
 
 -- questao 05
 select distinct nome from aluno as a, emprestimo as e 
 where e.codaluno <> a.codigo;
 
 -- questao 06 
-select NOME, count(CODEMPREST) from aluno as a 
-	left join emprestimo as e on e.CODALUNO = a.CODIGO
+select nome, count(codemprest) from aluno as a 
+	left join emprestimo as e on e.codaluno = a.codigo
 	group by a.nome;
     
 -- questao 07
 select nomeaut from autor as au
-	join autoria as aut on au.CODIGO = aut.CODAUTOR
-    join livro as l on l.CODASSUNTO = (select codigo from assunto where descricao = "LITERATURA BRASILEIRA");
+	join autoria as aut on au.codigo = aut.codautor
+    join livro as l on l.codassunto = (select codigo from assunto where descricao = "LITERATURA BRASILEIRA");
 
 -- questao 08 
-select NOME from aluno as a 
-	left join emprestimo as e on e.CODALUNO = a.CODIGO
+select nome from aluno as a 
+	left join emprestimo as e on e.codaluno = a.codigo
 	group by a.nome
-    having count(e.CODEMPREST) >= 10;
+    having count(e.codemprest) >= 10;
     
 -- questao 09
-select distinct a.NOMEAUT from autor as a, autoria as au where au.CODLIVRO = 
-( select CODLIVRO from autoria where codautor = (select CODIGO from autor where NOMEAUT = "NAVATHE") ) and a.codigo = au.codautor and a.nomeaut <> "NAVATHE";
+select distinct a.nomeaut from autor as a, autoria as au where au.codlivro = 
+( select codlivro from autoria where codautor = (select codigo from autor where nomeaut = "NAVATHE") ) 
+ and a.codigo = au.codautor and a.nomeaut <> "NAVATHE";
 
 -- questao 10
-SELECT nomeaut FROM autor a0 WHERE 
-(SELECT COUNT(*) FROM autor a1 JOIN autoria i ON a1.codigo = i.codautor WHERE a1.codigo = a0.codigo) > 
-(SELECT COUNT(*) FROM autor a2 JOIN autoria i ON a2.codigo = i.codautor WHERE a2.nomeaut = 'NAVATHE');
+select nomeaut from autor a0 where 
+(select count(*) from autor a1 join autoria i on a1.codigo = i.codautor where a1.codigo = a0.codigo) > 
+(select count(*) from autor a2 join autoria i on a2.codigo = i.codautor where a2.nomeaut = 'NAVATHE');
 
 -- questao 11
 select nome, avg(multa) from aluno as a 
@@ -78,41 +79,37 @@ join itememprest as ie on ie.codemprestitem = emp.codemprest and (day(ie.datadev
 join exemplar as ex on ex.codexemplar = ie.codexemplar
 join livro as l on l.codigo = ex.codlivro;
 
--- questao 15      
-desc itememprest;
-
-SELECT l.titulo FROM livro l 
-JOIN exemplar ex 
-JOIN itememprest i ON l.codigo = ex.codlivro AND ex.codexemplar = i.codexemplar
-WHERE
-(SELECT COUNT(*) FROM itememprest i2  
- JOIN emprestimo em ON em.codemprest = i2.codemprestitem 
- WHERE i2.codexemplar = ex.codexemplar AND year(em.dataemprest) = 2019)
+-- questao 15
+select l.titulo from livro l 
+join exemplar ex 
+join itememprest i on l.codigo = ex.codlivro and ex.codexemplar = i.codexemplar
+where
+(select count(*) from itememprest i2  
+ join emprestimo em on em.codemprest = i2.codemprestitem 
+ where i2.codexemplar = ex.codexemplar and year(em.dataemprest) = 2019)
  = 
-(SELECT MAX(qtd) FROM( 
-	SELECT COUNT(*) AS qtd FROM itememprest i2 
-	JOIN emprestimo em ON em.codemprest = i2.codemprestitem	
-	WHERE year(em.dataemprest) = 2019
-	GROUP BY i2.codexemplar) AS tb0 );
+(select max(qtd) from( 
+	select count(*) as qtd from itememprest i2 
+	join emprestimo em on em.codemprest = i2.codemprestitem	
+	where year(em.dataemprest) = 2019
+	group by i2.codexemplar) as tb0 );
     
 -- questao 16
-SELECT distinct l.titulo, e.codexemplar FROM livro AS l 
-JOIN exemplar AS e
-JOIN editora AS ed ON e.codlivro = l.codigo AND ed.codigo = l.codedit 
-WHERE e.VALORAQUISICAO > (SELECT av FROM (SELECT AVG(e.valoraquisicao) AS av, ed.codigo AS ed 
-	FROM livro AS l JOIN exemplar AS e JOIN editora AS ed ON e.codlivro = l.codigo AND ed.codigo = l.codedit GROUP BY ed.codigo) 
-    AS tb0 WHERE ed = ed.codigo);
+select distinct l.titulo, e.codexemplar from livro as l 
+join exemplar as e
+join editora as ed on e.codlivro = l.codigo and ed.codigo = l.codedit 
+where e.valoraquisicao > (select av from (select avg(e.valoraquisicao) as av, ed.codigo as ed 
+	from livro as l join exemplar as e join editora as ed on e.codlivro = l.codigo and ed.codigo = l.codedit group by ed.codigo) 
+    as tb0 where ed = ed.codigo);
 
 -- questao 17
-SET optimizer_switch = 'derived_merge=off'; 
-SET SQL_SAFE_UPDATES = 0; 
-DELETE FROM aluno 
-WHERE codigo IN (SELECT a.codigo FROM (SELECT * FROM aluno) AS a 
-LEFT JOIN emprestimo AS e ON a.codigo = e.codaluno WHERE e.CODEMPREST IS NULL); 
-SET optimizer_switch = 'derived_merge=on'; 
-SET SQL_SAFE_UPDATES = 1;
-
-select codigo from aluno;
+set optimizer_switch = 'derived_merge=off'; 
+set sql_safe_updates = 0; 
+delete from aluno 
+where codigo in (select a.codigo from (select * from aluno) as a 
+left join emprestimo as e on a.codigo = e.codaluno where e.codemprest is null); 
+set optimizer_switch = 'derived_merge=on'; 
+set sql_safe_updates = 1;
 
 -- questao 18
 update livro as l
